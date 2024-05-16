@@ -18,5 +18,17 @@ return {
 			-- You can configure highlights by doing something like:
 		end,
 	},
-	{ "brenoprata10/nvim-highlight-colors", opts = {} },
+	{
+		"brenoprata10/nvim-highlight-colors",
+		opts = { enable_named_colors = false },
+		config = function()
+			-- only load on .tmux.conf file
+			require("nvim-highlight-colors").setup({
+				enable_named_colors = false,
+			})
+			-- if vim.fn.expand("%:t") == ".tmux.conf" then
+			-- 	require("nvim-highlight-colors").setup(opts)
+			-- end
+		end,
+	},
 }

@@ -1,6 +1,7 @@
 return {
 	{ -- Autocompletion
 		"hrsh7th/nvim-cmp",
+		lazy = false,
 		event = "InsertEnter",
 		dependencies = {
 			-- Snippet Engine & its associated nvim-cmp source
@@ -27,6 +28,26 @@ return {
 					-- },
 				},
 			},
+			{
+				"zbirenbaum/copilot-cmp",
+				lazy = false,
+				dependencies = "copilot.lua",
+				opts = {
+					event = { "InsertEnter", "LspAttach" },
+					fix_pairs = true,
+				},
+				config = function(_, opts)
+					local copilot_cmp = require("copilot_cmp")
+					copilot_cmp.setup(opts)
+					-- attach cmp source whenever copilot attaches
+					-- fixes lazy-loading issues with the copilot cmp source
+					-- LazyVim.lsp.on_attach(function(client)
+					-- 	if client.name == "copilot" then
+					-- 		copilot_cmp._on_insert_enter({})
+					-- 	end
+					-- end)
+				end,
+			},
 			"saadparwaiz1/cmp_luasnip",
 
 			-- Adds other completion capabilities.
@@ -34,14 +55,24 @@ return {
 			--  into multiple repos for maintenance purposes.
 			"hrsh7th/cmp-nvim-lsp",
 			"hrsh7th/cmp-path",
+			"onsails/lspkind.nvim",
 		},
 		config = function()
 			-- See `:help cmp`
 			local cmp = require("cmp")
 			local luasnip = require("luasnip")
+			local lspkind = require("lspkind")
+			local copilot_cmp = require("copilot_cmp")
 			luasnip.config.setup({})
 
 			cmp.setup({
+				formatting = {
+					format = lspkind.cmp_format({
+						mode = "symbol",
+						max_width = 50,
+						symbol_map = { Copilot = "" },
+					}),
+				},
 				snippet = {
 					expand = function(args)
 						luasnip.lsp_expand(args.body)
@@ -102,9 +133,10 @@ return {
 					--    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
 				}),
 				sources = {
-					{ name = "nvim_lsp" },
-					{ name = "luasnip" },
-					{ name = "path" },
+					-- { name = "copilot", group_index = 2 },
+					{ name = "nvim_lsp", group_index = 2 },
+					{ name = "luasnip", group_index = 2 },
+					{ name = "path", group_index = 2 },
 				},
 			})
 		end,

@@ -23,6 +23,8 @@ return {
 
 		-- Add your own debuggers here
 		"leoluz/nvim-dap-go",
+		"theHamsta/nvim-dap-virtual-text",
+		"folke/neodev.nvim",
 	},
 	config = function()
 		local dap = require("dap")
@@ -46,24 +48,65 @@ return {
 		})
 
 		-- Basic debugging keymaps, feel free to change to your liking!
-		vim.keymap.set("n", "<F5>", dap.continue, { desc = "Debug: Start/Continue" })
-		vim.keymap.set("n", "<F1>", dap.step_into, { desc = "Debug: Step Into" })
-		vim.keymap.set("n", "<F2>", dap.step_over, { desc = "Debug: Step Over" })
-		vim.keymap.set("n", "<F3>", dap.step_out, { desc = "Debug: Step Out" })
+		-- vim.keymap.set("n", "<F5>", dap.continue, { desc = "Debug: Start/Continue" })
+		vim.keymap.set("n", "<leader>dc", dap.continue, { desc = "Debug: Start/Continue" })
+		vim.keymap.set("n", "<leader>di", dap.step_into, { desc = "Debug: Step Into" })
+		vim.keymap.set("n", "<leader>do", dap.step_over, { desc = "Debug: Step Over" })
+		vim.keymap.set("n", "<leader>dt", dap.step_out, { desc = "Debug: Step Out" })
 		vim.keymap.set("n", "<leader>b", dap.toggle_breakpoint, { desc = "Debug: Toggle Breakpoint" })
+		-- Terminate session
+		vim.keymap.set("n", "<leader>dk", dap.disconnect, { desc = "Debug: Disconnect" })
 		vim.keymap.set("n", "<leader>B", function()
 			dap.set_breakpoint(vim.fn.input("Breakpoint condition: "))
 		end, { desc = "Debug: Set Breakpoint" })
 
-		vim.fn.sign_define("DapBreakpoint", { text = "🟥", texthl = "", linehl = "", numhl = "" })
-		vim.fn.sign_define("DapStopped", { text = "▶️", texthl = "", linehl = "", numhl = "" })
+		vim.fn.sign_define("DapBreakpoint", { text = "", texthl = "red", linehl = "", numhl = "" })
+		vim.fn.sign_define("DapStopped", { text = "", texthl = "yellow", linehl = "", numhl = "" })
 
+		require("neodev").setup({
+			library = { plugins = { "nvim-dap-ui" }, types = true },
+		})
 		-- Dap UI setup
 		-- For more information, see |:help nvim-dap-ui|
 		dapui.setup({
 			-- Set icons to characters that are more likely to work in every terminal.
 			--    Feel free to remove or use ones that you like more! :)
 			--    Don't feel like these are good choices.
+			-- Customize layouts
+			layouts = {
+				{
+					elements = {
+						{
+							id = "scopes",
+							size = 0.50,
+						},
+						{
+							id = "watches",
+							size = 0.20,
+						},
+						{
+							id = "stacks",
+							size = 0.15,
+						},
+						{
+							id = "breakpoints",
+							size = 0.15,
+						},
+					},
+					position = "left",
+					size = 40,
+				},
+				{
+					elements = {
+						{
+							id = "repl",
+							size = 1,
+						},
+					},
+					position = "bottom",
+					size = 10,
+				},
+			},
 			icons = { expanded = "▾", collapsed = "▸", current_frame = "*" },
 			controls = {
 				icons = {
@@ -80,8 +123,8 @@ return {
 			},
 		})
 
-		-- Toggle to see last session result. Without this, you can't see session output in case of unhandled exception.
-		vim.keymap.set("n", "<F7>", dapui.toggle, { desc = "Debug: See last session result." })
+		-- Hide ui with <leader>du
+		vim.keymap.set("n", "<leader>du", dapui.toggle, { desc = "Debug: Toggle UI" })
 
 		dap.listeners.after.event_initialized["dapui_config"] = dapui.open
 		dap.listeners.before.event_terminated["dapui_config"] = dapui.close
@@ -95,6 +138,7 @@ return {
 				detached = vim.fn.has("win32") == 0,
 			},
 		})
+		require("nvim-dap-virtual-text").setup()
 		require("dap.ext.vscode").load_launchjs()
 	end,
 }
