@@ -33,3 +33,9 @@ vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper win
 -- Explore
 vim.keymap.set("n", "<leader>x", "<cmd>Ex<CR>", { desc = "Open explorer" })
 vim.keymap.set("v", "<leader>p", [["_dP]])
+
+-- Select next function
+vim.keymap.set("n", "<leader>sf", function()
+	-- run motion va{ shift v
+	vim.fn.feedkeys("va{V")
+end, { desc = "Select [F]unction" })
