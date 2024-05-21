@@ -133,9 +133,23 @@ return {
 		-- Install golang specific config
 		require("dap-go").setup({
 			delve = {
-				-- On Windows delve must be run attached or it crashes.
-				-- See https://github.com/leoluz/nvim-dap-go/blob/main/README.md#configuring
-				detached = vim.fn.has("win32") == 0,
+				port = 2345,
+				type = "server",
+				host = "localhost",
+			},
+			dap_configurations = {
+				{
+					type = "go",
+					name = "Attach remote",
+					request = "attach",
+					mode = "remote",
+					substitutePath = {
+						{
+							from = "${workspaceFolder}",
+							to = "/app",
+						},
+					},
+				},
 			},
 		})
 		require("nvim-dap-virtual-text").setup()
