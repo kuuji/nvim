@@ -109,6 +109,7 @@ return {
 			},
 			icons = { expanded = "▾", collapsed = "▸", current_frame = "*" },
 			controls = {
+				enabled = false,
 				icons = {
 					pause = "⏸",
 					play = "▶",
