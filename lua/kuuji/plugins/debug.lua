@@ -125,7 +125,11 @@ return {
 		})
 
 		-- Hide ui with <leader>du
-		vim.keymap.set("n", "<leader>du", dapui.toggle, { desc = "Debug: Toggle UI" })
+		vim.keymap.set("n", "<leader>du", function()
+			dapui.toggle({
+				reset = true,
+			})
+		end, { desc = "Debug: Toggle UI" })
 
 		dap.listeners.after.event_initialized["dapui_config"] = dapui.open
 		dap.listeners.before.event_terminated["dapui_config"] = dapui.close
