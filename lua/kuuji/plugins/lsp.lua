@@ -180,7 +180,7 @@ return {
 						url = "https://www.schemastore.org/api/json/catalog.json",
 					},
 					schemas = {
-						kubernetes = "*.yaml",
+						kubernetes = "*.{yaml,yml}",
 						["http://json.schemastore.org/github-workflow"] = ".github/workflows/*",
 						["http://json.schemastore.org/github-action"] = ".github/action.{yml,yaml}",
 						["https://raw.githubusercontent.com/microsoft/azure-pipelines-vscode/master/service-schema.json"] = "azure-pipelines.{yml,yaml}",
@@ -251,6 +251,24 @@ return {
 					end,
 				},
 			})
+		end,
+	},
+	{
+		"someone-stole-my-name/yaml-companion.nvim",
+		dependencies = {
+			{ "neovim/nvim-lspconfig" },
+			{ "nvim-lua/plenary.nvim" },
+			{ "nvim-telescope/telescope.nvim" },
+		},
+		config = function()
+			require("telescope").load_extension("yaml_schema")
+			local cfg = require("yaml-companion").setup({
+				-- Add any options here, or leave empty to use the default settings
+				-- lspconfig = {
+				--   cmd = {"yaml-language-server"}
+				-- },
+			})
+			require("lspconfig")["yamlls"].setup(cfg)
 		end,
 	},
 }

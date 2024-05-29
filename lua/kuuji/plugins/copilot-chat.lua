@@ -17,7 +17,7 @@ return {
 			local cc = require("CopilotChat")
 			cc.setup({
 				-- Configuration here
-				debug = true,
+				debug = false,
 				prompts = {
 					Godoc = {
 						prompt = "/COPILOT_GENERATE Please add a short documentation comment for the selection. Respect the godoc convention as much as possible. Do not remove the function's content",
