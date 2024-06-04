@@ -148,6 +148,12 @@ return {
 					name = "Attach remote",
 					request = "attach",
 					mode = "remote",
+				},
+				{
+					type = "go",
+					name = "Attach remote /app",
+					request = "attach",
+					mode = "remote",
 					substitutePath = {
 						{
 							from = "${workspaceFolder}",
