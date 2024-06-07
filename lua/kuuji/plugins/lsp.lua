@@ -14,6 +14,8 @@ return {
 			-- `neodev` configures Lua LSP for your Neovim config, runtime and plugins
 			-- used for completion, annotations and signatures of Neovim apis
 			{ "folke/neodev.nvim", opts = {} },
+			{ "towolf/vim-helm", ft = "helm" },
+			"b0o/schemastore.nvim",
 		},
 		config = function()
 			-- Brief aside: **What is LSP?**
@@ -136,11 +138,11 @@ return {
 					-- code, if the language server you are using supports them
 					--
 					-- This may be unwanted, since they displace some of your code
-					if client and client.server_capabilities.inlayHintProvider and vim.lsp.inlay_hint then
-						map("<leader>th", function()
-							vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
-						end, "[T]oggle Inlay [H]ints")
-					end
+					-- if client and client.server_capabilities.inlayHintProvider and vim.lsp.inlay_hint then
+					-- 	map("<leader>th", function()
+					-- 		vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
+					-- 	end, "[T]oggle Inlay [H]ints")
+					-- end
 				end,
 			})
 
@@ -162,7 +164,7 @@ return {
 			--        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
 			local servers = {
 				-- clangd = {},
-				-- gopls = {},
+				gopls = {},
 				-- pyright = {},
 				-- rust_analyzer = {},
 				-- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
@@ -174,31 +176,60 @@ return {
 				-- tsserver = {},
 				--
 				yamlls = {
-
-					schemaStore = {
-						enable = true,
-						url = "https://www.schemastore.org/api/json/catalog.json",
+					settings = {
+						yaml = {
+							schemaStore = {
+								enable = false,
+								url = "https://www.schemastore.org/api/json/catalog.json",
+							},
+							schemas = {
+								kubernetes = "*.yaml",
+								["http://json.schemastore.org/github-workflow"] = ".github/workflows/*",
+								["http://json.schemastore.org/github-action"] = ".github/action.{yml,yaml}",
+								["https://raw.githubusercontent.com/microsoft/azure-pipelines-vscode/master/service-schema.json"] = "azure-pipelines.{yml,yaml}",
+								["https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/ansible.json#/$defs/tasks"] = "roles/tasks/*.{yml,yaml}",
+								["https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/ansible.json#/$defs/playbook"] = "*play*.{yml,yaml}",
+								["http://json.schemastore.org/prettierrc"] = ".prettierrc.{yml,yaml}",
+								["http://json.schemastore.org/kustomization"] = "kustomization.{yml,yaml}",
+								["http://json.schemastore.org/chart"] = "Chart.{yml,yaml}",
+								["https://json.schemastore.org/dependabot-v2"] = ".github/dependabot.{yml,yaml}",
+								["https://gitlab.com/gitlab-org/gitlab/-/raw/master/app/assets/javascripts/editor/schema/ci.json"] = "*gitlab-ci*.{yml,yaml}",
+								["https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/schemas/v3.1/schema.json"] = "*api*.{yml,yaml}",
+								["https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json"] = "*docker-compose*.{yml,yaml}",
+								["https://raw.githubusercontent.com/argoproj/argo-workflows/master/api/jsonschema/schema.json"] = "*flow*.{yml,yaml}",
+							},
+							-- schemas = require("schemastore").yaml.schemas(),
+							format = { enabled = true },
+							-- anabling this conflicts between Kubernetes resources and kustomization.yaml and Helmreleases
+							-- see utils.custom_lsp_attach() for the workaround
+							-- how can I detect Kubernetes ONLY yaml files? (no CRDs, Helmreleases, etc.)
+							validate = false,
+							completion = true,
+							hover = true,
+						},
 					},
-					schemas = {
-						kubernetes = "*.{yaml,yml}",
-						["http://json.schemastore.org/github-workflow"] = ".github/workflows/*",
-						["http://json.schemastore.org/github-action"] = ".github/action.{yml,yaml}",
-						["https://raw.githubusercontent.com/microsoft/azure-pipelines-vscode/master/service-schema.json"] = "azure-pipelines.{yml,yaml}",
-						["https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/ansible.json#/$defs/tasks"] = "roles/tasks/*.{yml,yaml}",
-						["https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/ansible.json#/$defs/playbook"] = "*play*.{yml,yaml}",
-						["http://json.schemastore.org/prettierrc"] = ".prettierrc.{yml,yaml}",
-						["http://json.schemastore.org/kustomization"] = "kustomization.{yml,yaml}",
-						["http://json.schemastore.org/chart"] = "Chart.{yml,yaml}",
-						["https://json.schemastore.org/dependabot-v2"] = ".github/dependabot.{yml,yaml}",
-						["https://gitlab.com/gitlab-org/gitlab/-/raw/master/app/assets/javascripts/editor/schema/ci.json"] = "*gitlab-ci*.{yml,yaml}",
-						["https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/schemas/v3.1/schema.json"] = "*api*.{yml,yaml}",
-						["https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json"] = "*docker-compose*.{yml,yaml}",
-						["https://raw.githubusercontent.com/argoproj/argo-workflows/master/api/jsonschema/schema.json"] = "*flow*.{yml,yaml}",
+				},
+				helm_ls = {
+					settings = {
+						["helm-ls"] = {
+							yamlls = {
+								path = "yaml-language-server",
+								config = {
+									schemaStore = {
+										enable = false,
+										url = "https://www.schemastore.org/api/json/catalog.json",
+									},
+									schemas = {
+										kubernetes = "templates/**",
+									},
+									format = { enabled = true },
+									completion = true,
+									validate = false,
+									hover = true,
+								},
+							},
+						},
 					},
-					format = { enabled = false },
-					validate = false,
-					completion = true,
-					hover = true,
 				},
 				lua_ls = {
 					-- cmd = {...},
@@ -214,7 +245,7 @@ return {
 								disable = {
 									"missing-fields",
 								},
-								global = {
+								globals = {
 									"vim",
 								},
 							},
@@ -253,22 +284,43 @@ return {
 			})
 		end,
 	},
-	{
-		"someone-stole-my-name/yaml-companion.nvim",
-		dependencies = {
-			{ "neovim/nvim-lspconfig" },
-			{ "nvim-lua/plenary.nvim" },
-			{ "nvim-telescope/telescope.nvim" },
-		},
-		config = function()
-			require("telescope").load_extension("yaml_schema")
-			local cfg = require("yaml-companion").setup({
-				-- Add any options here, or leave empty to use the default settings
-				-- lspconfig = {
-				--   cmd = {"yaml-language-server"}
-				-- },
-			})
-			require("lspconfig")["yamlls"].setup(cfg)
-		end,
-	},
+	-- {
+	-- 	"msvechla/yaml-companion.nvim",
+	-- 	branch = "kubernetes_crd_detection",
+	-- 	ft = { "yaml" },
+	-- 	opts = {
+	-- 		builtin_matchers = {
+	-- 			kubernetes = { enabled = true },
+	-- 		},
+	-- 		lspconfig = {
+	-- 			flags = {
+	-- 				debounce_text_changes = 150,
+	-- 			},
+	-- 			settings = {
+	-- 				redhat = { telemetry = { enabled = false } },
+	-- 				yaml = {
+	-- 					validate = false,
+	-- 					format = { enable = true },
+	-- 					hover = true,
+	-- 					schemaStore = {
+	-- 						enable = false,
+	-- 						url = "https://www.schemastore.org/api/json/catalog.json",
+	-- 					},
+	-- 					schemaDownload = { enable = true },
+	-- 					trace = { server = "debug" },
+	-- 				},
+	-- 			},
+	-- 		},
+	-- 	},
+	-- 	dependencies = {
+	-- 		{ "neovim/nvim-lspconfig" },
+	-- 		{ "nvim-lua/plenary.nvim" },
+	-- 		{ "nvim-telescope/telescope.nvim" },
+	-- 	},
+	-- 	config = function(_, opts)
+	-- 		local cfg = require("yaml-companion").setup(opts)
+	-- 		require("lspconfig")["yamlls"].setup(cfg)
+	-- 		require("telescope").load_extension("yaml_schema")
+	-- 	end,
+	-- },
 }
