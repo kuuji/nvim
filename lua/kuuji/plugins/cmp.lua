@@ -28,26 +28,26 @@ return {
 					-- },
 				},
 			},
-			{
-				"zbirenbaum/copilot-cmp",
-				lazy = false,
-				dependencies = "copilot.lua",
-				opts = {
-					event = { "InsertEnter", "LspAttach" },
-					fix_pairs = true,
-				},
-				config = function(_, opts)
-					local copilot_cmp = require("copilot_cmp")
-					copilot_cmp.setup(opts)
-					-- attach cmp source whenever copilot attaches
-					-- fixes lazy-loading issues with the copilot cmp source
-					-- LazyVim.lsp.on_attach(function(client)
-					-- 	if client.name == "copilot" then
-					-- 		copilot_cmp._on_insert_enter({})
-					-- 	end
-					-- end)
-				end,
-			},
+			-- {
+			-- 	"zbirenbaum/copilot-cmp",
+			-- 	lazy = false,
+			-- 	dependencies = "copilot.lua",
+			-- 	opts = {
+			-- 		event = { "InsertEnter", "LspAttach" },
+			-- 		fix_pairs = true,
+			-- 	},
+			-- 	config = function(_, opts)
+			-- 		local copilot_cmp = require("copilot_cmp")
+			-- 		copilot_cmp.setup(opts)
+			-- 		-- attach cmp source whenever copilot attaches
+			-- 		-- fixes lazy-loading issues with the copilot cmp source
+			-- 		-- LazyVim.lsp.on_attach(function(client)
+			-- 		-- 	if client.name == "copilot" then
+			-- 		-- 		copilot_cmp._on_insert_enter({})
+			-- 		-- 	end
+			-- 		-- end)
+			-- 	end,
+			-- },
 			"saadparwaiz1/cmp_luasnip",
 
 			-- Adds other completion capabilities.
@@ -62,7 +62,7 @@ return {
 			local cmp = require("cmp")
 			local luasnip = require("luasnip")
 			local lspkind = require("lspkind")
-			local copilot_cmp = require("copilot_cmp")
+			-- local copilot_cmp = require("copilot_cmp")
 			luasnip.config.setup({})
 
 			cmp.setup({
