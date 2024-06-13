@@ -11,7 +11,7 @@ orange #F3A96A
 yellow #E3D367
 green #9CD57B
 blue #78CEE9
-purple #BAAOF8
+purple #BAA0F8
 fg #E1E2E3
 gray #82878B
 bg_red #FF6D7E
