@@ -77,7 +77,7 @@ return {
 			function()
 				require("neotest").run.run({ suite = false, strategy = "dap" })
 			end,
-			desc = "Debug nearest test",
+			desc = "[t]est [d]ebug nearest test",
 		},
 	},
 	config = function()

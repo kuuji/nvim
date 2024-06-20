@@ -1,6 +1,8 @@
 return {
 	{ -- Fuzzy Finder (files, lsp, etc)
 		"nvim-telescope/telescope.nvim",
+		tag = "0.1.7",
+		pin = true,
 		event = "VimEnter",
 		dependencies = {
 			"nvim-lua/plenary.nvim",
@@ -101,6 +103,12 @@ return {
 			vim.keymap.set("n", "<leader>sn", function()
 				builtin.find_files({ cwd = vim.fn.stdpath("config") })
 			end, { desc = "[F]ind [N]eovim files" })
+			-- Find files exclude the vendor directory
+			vim.keymap.set("n", "<leader>fv", function()
+				builtin.find_files({
+					find_command = { "rg", "--files", "--hidden", "--glob", "!.git", "--glob", "!vendor" },
+				})
+			end, { desc = "[F]ind non [V]endor files" })
 		end,
 	},
 }

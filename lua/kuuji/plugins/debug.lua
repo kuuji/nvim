@@ -78,23 +78,23 @@ return {
 					elements = {
 						{
 							id = "scopes",
-							size = 0.50,
+							size = 0.70,
 						},
 						{
 							id = "watches",
-							size = 0.20,
+							size = 0.10,
 						},
 						{
 							id = "stacks",
-							size = 0.15,
+							size = 0.10,
 						},
 						{
 							id = "breakpoints",
-							size = 0.15,
+							size = 0.10,
 						},
 					},
 					position = "left",
-					size = 40,
+					size = 60,
 				},
 				{
 					elements = {
