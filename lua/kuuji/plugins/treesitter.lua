@@ -31,4 +31,16 @@ return {
 			--    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
 		end,
 	},
+	{
+		"vim-scripts/applescript.vim",
+		ft = "applescript",
+		init = function()
+			vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+				pattern = { "*.applescript", "*.scpt" },
+				callback = function()
+					vim.bo.filetype = "applescript"
+				end,
+			})
+		end,
+	},
 }
