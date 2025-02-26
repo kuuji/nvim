@@ -18,5 +18,26 @@ return {
     -- "catppuccin/nvim",
     -- "nvim-tree/nvim-tree.lua",
   },
-  config = true,
+  config = function()
+    require("nvim_aider").setup({
+      -- Theme colors based on your color scheme
+      theme = {
+        user_input_color = "#9CD57B",        -- green
+        tool_output_color = "#78CEE9",       -- blue
+        tool_error_color = "#F76C7C",        -- red
+        tool_warning_color = "#E3D367",      -- yellow
+        assistant_output_color = "#BAA0F8",  -- purple
+        completion_menu_color = "#E1E2E3",   -- fg
+        completion_menu_bg_color = "#313B42", -- bg1
+        completion_menu_current_color = "#1C1E1F", -- black
+        completion_menu_current_bg_color = "#78CEE9", -- blue
+      },
+      -- Default args for aider
+      args = {
+        "--no-auto-commits",
+        "--pretty",
+        "--stream",
+      },
+    })
+  end,
 }
