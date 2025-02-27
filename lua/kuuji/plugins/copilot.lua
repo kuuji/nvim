@@ -33,7 +33,7 @@ return {
 		-- set keymap to toggle auto_trigger
 		vim.keymap.set(
 			"n",
-			"<leader>ac",
+			"<leader>cpt",
 			require("copilot.suggestion").toggle_auto_trigger,
 			{ desc = "Toggle copilot auto trigger" }
 		)
