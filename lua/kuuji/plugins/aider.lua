@@ -41,5 +41,16 @@ return {
 				"--stream",
 			},
 		})
+		-- Set up an autocmd to automatically reload buffers when they're modified externally
+		vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHoldI" }, {
+			pattern = { "*" },
+			callback = function()
+				vim.cmd("checktime") -- Check if files changed outside of Vim
+			end,
+			desc = "Auto reload buffers when they're modified externally",
+		})
+
+		-- Enable automatic reload of files
+		vim.o.autoread = true
 	end,
 }
